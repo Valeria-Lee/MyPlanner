@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta, time
 from pyfiglet import Figlet
+import random
 import csv
 
-# TODO: Anadir el dador de hobbies y un pequeno task manager.
+# TODO: Un pequeno task manager, hacer un menu y decorar.
 
 class Day:
     def __init__(self, day_name, activities=[], start_time=[], end_time = []):
@@ -92,6 +93,23 @@ def init_days() -> list:
 
     return days
 
+def gimme_hobbie():
+    hobbies = []
+    hobbie_materials = []
+
+    with open('hobbie_ideas.csv') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        data = list(reader)
+        for row in data:
+            hobbies.append(row[0])
+            hobbie_materials.append(row[1])
+
+    chosen_index = random.randint(0,6)
+    chosen_hobbie = hobbies[chosen_index]
+    needed_materiales = hobbie_materials[chosen_index]
+
+    return [chosen_hobbie, needed_materiales]
+
 def main():
     # f = Figlet(font='alligator')
     # print(f.renderText('planner'))
@@ -112,6 +130,8 @@ def main():
             day_object = d
 
     day_object.consult_act(hour)
+
+    print(gimme_hobbie())
 
 if __name__ == '__main__':
     main()
