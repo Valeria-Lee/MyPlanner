@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta, time
 from pyfiglet import Figlet
+from termcolor import cprint
+from time import sleep
 import random
 import csv
-
-# TODO: Un pequeno task manager, hacer un menu y decorar.
 
 class Day:
     def __init__(self, day_name, activities=[], start_time=[], end_time = []):
@@ -29,7 +29,6 @@ class Day:
         for i in range(len(self.activities)):
             print(f'{self.start_time[i]} - {self.end_time[i]} -> {self.activities[i]}')
 
-    # TODO: Que imprima la actividad...
     def consult_act(self, hour):
         hour_to_search = time(int(hour[0:2]), int(hour[3:5]))
 
@@ -44,6 +43,8 @@ class Day:
 
             if start_range < hour_to_search < end_range:
                 print(f'{start_range} < {hour_to_search} < {end_range}')
+
+        print(self.activities[i-1])
 
 
 def get_hour(current_time) -> str:
@@ -110,28 +111,52 @@ def gimme_hobbie():
 
     return [chosen_hobbie, needed_materiales]
 
-def main():
-    # f = Figlet(font='alligator')
-    # print(f.renderText('planner'))
+def get_menu():
     day_object = None
 
     current_time = datetime.now()
     # hour = get_hour(current_time)
     hour = '18:20'
     # day = get_day(current_time)
-    day = 'Friday' # Para probar, recuerda que no tienes del finde.
+    day = 'Monday' # Para probar, recuerda que no tienes del finde.
 
     days = init_days()
 
-    # si un atributo de un elemento de una lista coincide con el valor de una variable, entonces, get schedule
+    f = Figlet(font='alligator')
+    print(f.renderText('planner'))
+
+    decoration = "* " * 16
+
+    using = True
+
     for d in days:
         if d.day_name == day:
-            d.get_schedule()
             day_object = d
 
-    day_object.consult_act(hour)
+    while using:
 
-    print(gimme_hobbie())
+        cprint(decoration + " Select an option: " + decoration, "black", "on_light_red")
+
+        cprint("| (1) Consult schedule | (2) Consult activity | (3) Get a hobbie | (4) Quit", "white", "on_yellow")
+
+        opt = int(input())
+
+        match opt:
+            case 1:
+                d.get_schedule()
+            case 2:
+                day_object.consult_act(hour)
+            case 3:
+                print(gimme_hobbie())
+            case 4:
+                cprint("-> Quitting...", "white", "on_red")
+                using = False
+
+        sleep(0.5)
+
+def main():
+    get_menu()
+
 
 if __name__ == '__main__':
     main()
